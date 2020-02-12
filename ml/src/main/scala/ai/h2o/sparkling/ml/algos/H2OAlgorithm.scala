@@ -56,12 +56,19 @@ abstract class H2OAlgorithm[B <: H2OBaseModelBuilder : ClassTag, M <: H2OBaseMod
     }
 
     // Train
-    val binaryModel: H2OBaseModel = trainModel(parameters)
-    val mojoData = ModelSerializationSupport.getMojoData(binaryModel)
+
+    val hc = H2OContext.ensure()
+    val (mojoData, algoName) = if (RestApiUtils.isRestAPIBased(Some(hc))) {
+      val model = RestApiUtils.trainModel(hc.getConf, extractParamMap())
+      (RestApiUtils.downloadMOJOData(hc.getConf, model), model.algoName)
+    } else {
+      val binaryModel = trainModel(parameters)
+      (ModelSerializationSupport.getMojoData(binaryModel), binaryModel._parms.algoName())
+    }
     val modelSettings = H2OMOJOSettings.createFromModelParams(this)
     H2OMOJOModel.createFromMojo(
       mojoData,
-      Identifiable.randomUID(binaryModel._parms.algoName()),
+      Identifiable.randomUID(algoName),
       modelSettings,
       internalFeatureCols)
   }
