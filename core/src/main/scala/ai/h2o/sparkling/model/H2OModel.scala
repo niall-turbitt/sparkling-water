@@ -20,7 +20,9 @@ package ai.h2o.sparkling.model
 import org.apache.spark.h2o.H2OConf
 import org.apache.spark.ml.param.ParamMap
 
-case class H2OModel(key: String, algoName: String) {
+case class H2OModel(key: String, algoName: String)
+
+object H2OModel {
   def trainModel(conf: H2OConf, params: ParamMap): H2OModel = {
     throw new UnsupportedOperationException
   }
@@ -28,5 +30,4 @@ case class H2OModel(key: String, algoName: String) {
   def downloadMOJOData(conf: H2OConf, model: H2OModel): Array[Byte] = {
     throw new UnsupportedOperationException
   }
-
 }
