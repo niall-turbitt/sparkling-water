@@ -84,7 +84,7 @@ ext {
     ]
 
     defaultScalaBaseVersion = '2.11'
-    supportedScalaBaseVersions = ['2.11': '2.11.12']
+    supportedScalaBaseVersions = ['2.11': '2.11.12', '2.12' : '2.12.10']
 }
 
 def versionSpecificProps = new Properties()
