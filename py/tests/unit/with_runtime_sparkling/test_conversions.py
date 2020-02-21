@@ -21,6 +21,7 @@ import pytest
 import time
 from pyspark.mllib.linalg import *
 from pyspark.sql.types import *
+from pyspark.ml.util import _jvm
 
 from tests import generic_test_utils
 from tests import unit_test_utils
@@ -101,8 +102,8 @@ def testComplexRDDToH2OFrame(spark, hc):
 
 
 def testLongRDDToH2OFrame(spark, hc):
-    min = hc._jvm.Integer.MIN_VALUE - 1
-    max = hc._jvm.Integer.MAX_VALUE + 1
+    min = _jvm().Integer.MIN_VALUE - 1
+    max = _jvm().Integer.MAX_VALUE + 1
     rdd = spark.sparkContext.parallelize([1, min, max])
     h2o_frame = hc.asH2OFrame(rdd)
     assert h2o_frame[0, 0] == 1
