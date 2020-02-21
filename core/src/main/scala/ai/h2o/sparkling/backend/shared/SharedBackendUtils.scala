@@ -23,7 +23,6 @@ import org.apache.spark.expose.{Logging, Utils}
 import org.apache.spark.h2o.H2OConf
 import org.apache.spark.h2o.utils.NodeDesc
 import org.apache.spark.network.Security
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkContext, SparkEnv, SparkFiles}
 import water.support.SparkContextSupport
 
@@ -63,11 +62,11 @@ trait SharedBackendUtils extends Logging with Serializable {
     }
 
     if (conf.isInternalSecureConnectionsEnabled && conf.sslConf.isEmpty) {
-      Security.enableSSL(SparkSession.builder().getOrCreate(), conf)
+      Security.enableSSL(conf.sparkConf)
     }
 
     if (conf.autoFlowSsl) {
-      Security.enableFlowSSL(SparkSession.builder().getOrCreate(), conf)
+      Security.enableFlowSSL(conf)
     }
 
     if (conf.backendClusterMode != "internal" && conf.backendClusterMode != "external") {
