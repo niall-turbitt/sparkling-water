@@ -23,5 +23,8 @@ import org.apache.spark.sql.SparkSession
  * Internal utilities methods for Spark Session
  */
 object SparkSessionUtils {
-  def active: SparkSession = SparkSession.builder().getOrCreate()
+  def active: SparkSession = {
+    SparkSession.clearActiveSession
+    SparkSession.builder().getOrCreate()
+  }
 }
