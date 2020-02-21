@@ -25,7 +25,6 @@ import org.apache.spark.h2o.{H2OConf, H2OContext}
 import org.apache.spark.internal.Logging
 import org.apache.spark.rpc.RpcEndpointRef
 import org.apache.spark.scheduler.{SparkListener, SparkListenerExecutorAdded}
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.util.RpcUtils
 import org.apache.spark.{SparkContext, SparkEnv}
 import water.api.RestAPIManager
@@ -155,7 +154,7 @@ object InternalH2OBackend extends InternalBackendUtils {
   private def tearDownEndpoints(endpoints: Array[RpcEndpointRef]): Unit = endpoints.foreach(_.send(StopEndpointMsg))
 
   private def registerEndpoints(hc: H2OContext): Array[RpcEndpointRef] = {
-    val endpoints = new SpreadRDDBuilder(hc, guessTotalExecutorSize(SparkSession.active.sparkContext)).build()
+    val endpoints = new SpreadRDDBuilder(hc, guessTotalExecutorSize(SparkSessionUtils.active.sparkContext)).build()
     val endpointsFinal = if (hc.getConf.numH2OWorkers.isDefined) {
       endpoints.take(hc.getConf.numH2OWorkers.get)
     } else {
