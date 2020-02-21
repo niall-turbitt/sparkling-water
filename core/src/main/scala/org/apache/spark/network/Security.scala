@@ -26,22 +26,18 @@ import water.network.SparklingWaterSecurityUtils
 
 object Security extends Logging {
 
-  def enableSSL(conf: SparkConf): Unit = {
+  def enableSSL(conf: H2OConf): Unit = {
     val spark = SparkSessionUtils.active
     val sslPair = SparklingWaterSecurityUtils.generateSSLPair()
     val config = SparklingWaterSecurityUtils.generateSSLConfig(sslPair)
-    spark.sparkContext.conf.set(SharedBackendConf.PROP_SSL_CONF._1, config)
+    conf.set(SharedBackendConf.PROP_SSL_CONF._1, config)
     spark.sparkContext.addFile(sslPair.jks.getLocation)
     if (sslPair.jks.getLocation != sslPair.jts.getLocation) {
       spark.sparkContext.addFile(sslPair.jts.getLocation)
     }
   }
 
-  def enableSSL(spark: SparkSession, conf: SparkConf): Unit = enableSSL(conf)
-
-  def enableSSL(spark: SparkSession, conf: H2OConf): Unit = enableSSL(conf.sparkConf)
-
-  def enableSSL(spark: SparkSession): Unit = enableSSL(spark.sparkContext.conf)
+  def enableSSL(spark: SparkSession, conf: H2OConf): Unit = enableSSL(conf)
 
   def enableFlowSSL(conf: H2OConf): H2OConf = {
     val sslPair = SparklingWaterSecurityUtils.generateSSLPair(namePrefix = "h2o-internal-auto-flow-ssl")
@@ -50,10 +46,6 @@ object Security extends Logging {
   }
 
   def enableFlowSSL(spark: SparkSession, conf: H2OConf): H2OConf = enableFlowSSL(conf)
-
-  def enableSSL(sc: SparkContext, conf: SparkConf): Unit = enableSSL(conf)
-
-  def enableSSL(sc: SparkContext): Unit = enableSSL(sc.conf)
-
-  def enableSSL(sc: SparkContext, conf: H2OConf): Unit = enableSSL(conf.sparkConf)
+  
+  def enableSSL(sc: SparkContext, conf: H2OConf): Unit = enableSSL(conf)
 }
