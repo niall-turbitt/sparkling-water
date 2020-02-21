@@ -26,7 +26,8 @@ This can be also achieved in programmatic way in Scala using the utility class `
     import org.apache.spark.network.Security
     import org.apache.spark.h2o._
     val conf = new H2OConf(spark)
-    Security.enableSSL(spark, conf) // generate properties file, key pairs and set appropriate H2O parameters
-    val hc = H2OContext.getOrCreate(spark, conf) // start the H2O cluster
+    Security.enableSSL(conf) // generate properties file, key pairs and set appropriate H2O parameters
+    val hc = H2OContext.getOrCreate(conf) // start the H2O cluster
+
 
 This method generates all files and distributes them via YARN or Spark methods to all worker nodes. This communication is secure in the case of configured YARN/Spark security.

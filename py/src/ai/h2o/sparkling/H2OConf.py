@@ -26,23 +26,9 @@ from ai.h2o.sparkling.ExternalBackendConf import ExternalBackendConf
 
 
 class H2OConf(SharedBackendConf, InternalBackendConf, ExternalBackendConf):
-    def __init__(self, spark):
+    def __init__(self, spark=None):
         try:
-            spark_session = spark
-            if isinstance(spark, SparkContext):
-                warnings.warn("Method H2OContext.getOrCreate with argument of type SparkContext is deprecated and " +
-                              "parameter of type SparkSession is preferred.")
-                spark_session = SparkSession.builder.getOrCreate()
-
-            Initializer.load_sparkling_jar()
-            self._do_init(spark_session)
+            jvm = SparkSession.builder.getOrCreate()._sc._jvm
+            self._jconf = jvm.org.apache.spark.h2o.H2OConf()
         except:
             raise
-
-    def _do_init(self, spark_session):
-        self._spark_session = spark_session
-        self._sc = self._spark_session._sc
-        jvm = self._sc._jvm
-        jsc = self._sc._jsc
-        # Create instance of H2OConf class
-        self._jconf = jvm.org.apache.spark.h2o.H2OConf(jsc)
