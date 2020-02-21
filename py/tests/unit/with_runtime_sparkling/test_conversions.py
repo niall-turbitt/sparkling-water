@@ -113,8 +113,8 @@ def testLongRDDToH2OFrame(spark, hc):
 
 
 def testNumericRDDtoH2OFrameWithValueTooBig(spark, hc):
-    min = hc._jvm.Long.MIN_VALUE - 1
-    max = hc._jvm.Long.MAX_VALUE + 1
+    min = _jvm().Long.MIN_VALUE - 1
+    max = _jvm().Long.MAX_VALUE + 1
     rdd = spark.sparkContext.parallelize([1, min, max])
     with pytest.raises(ValueError):
         hc.asH2OFrame(rdd)
